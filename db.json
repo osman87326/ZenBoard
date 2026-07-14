@@ -1,0 +1,192 @@
+{
+  "users": [
+    {
+      "_id": "u1",
+      "name": "Sarah Jenkins (PM)",
+      "email": "admin@zenboard.com",
+      "password": "$2a$10$tZ2pB/LlytD7B6hF2l/c/O.rP8M1C0G6Cpxr6w6/R.KqH8bA7k56i",
+      "avatar": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150"
+    },
+    {
+      "_id": "u2",
+      "name": "Alex Rivera (Dev)",
+      "email": "dev@zenboard.com",
+      "password": "$2a$10$tZ2pB/LlytD7B6hF2l/c/O.rP8M1C0G6Cpxr6w6/R.KqH8bA7k56i",
+      "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150"
+    },
+    {
+      "_id": "u3",
+      "name": "Emma Watson (Designer)",
+      "email": "designer@zenboard.com",
+      "password": "$2a$10$tZ2pB/LlytD7B6hF2l/c/O.rP8M1C0G6Cpxr6w6/R.KqH8bA7k56i",
+      "avatar": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150"
+    }
+  ],
+  "tasks": [
+    {
+      "_id": "t1",
+      "title": "Stripe Gateway Integration",
+      "shortDescription": "Implement Stripe Checkout API and Webhook subscription updates.",
+      "description": "Set up Stripe billing client library, write `/api/webhook` routes to handle async subscription changes, and style the subscription settings components in the settings page.",
+      "priority": "High",
+      "status": "In Progress",
+      "dueDate": "2026-07-16T05:18:08.550Z",
+      "estHours": 12,
+      "assignee": {
+        "name": "Alex Rivera (Dev)",
+        "email": "dev@zenboard.com",
+        "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150"
+      },
+      "workspace": "ZenBoard Platform",
+      "coverImage": "https://images.unsplash.com/photo-1563013544-824ae1d704d3?w=800",
+      "attachments": [
+        "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=600",
+        "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=600"
+      ],
+      "creatorId": "u1",
+      "createdAt": "2026-07-08T05:18:08.551Z"
+    },
+    {
+      "_id": "t2",
+      "title": "Design Mobile App UI Mockups",
+      "shortDescription": "Create high-fidelity screens for the mobile board and dashboard views.",
+      "description": "Provide polished layout iterations for task cards, touch-based dragging behaviors, search/filter layout, and notification panel dropdown UI for iOS and Android displays.",
+      "priority": "Medium",
+      "status": "Done",
+      "dueDate": "2026-07-14T05:18:08.551Z",
+      "estHours": 8,
+      "assignee": {
+        "name": "Emma Watson (Designer)",
+        "email": "designer@zenboard.com",
+        "avatar": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150"
+      },
+      "workspace": "Mobile App",
+      "coverImage": "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800",
+      "attachments": [
+        "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600"
+      ],
+      "creatorId": "u1",
+      "createdAt": "2026-07-09T05:18:08.551Z"
+    },
+    {
+      "_id": "t3",
+      "title": "JWT Authentication Backend",
+      "shortDescription": "Implement sign up, sign in, and token authentication inside cookies.",
+      "description": "Use token signing methods inside backend routes. Save token inside HttpOnly secure cookie and add validation middleware to secure admin routes.",
+      "priority": "High",
+      "status": "Done",
+      "dueDate": "2026-07-11T05:18:08.551Z",
+      "estHours": 6,
+      "assignee": {
+        "name": "Sarah Jenkins (PM)",
+        "email": "admin@zenboard.com",
+        "avatar": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150"
+      },
+      "workspace": "ZenBoard Platform",
+      "coverImage": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800",
+      "attachments": [],
+      "creatorId": "u1",
+      "createdAt": "2026-07-06T05:18:08.551Z"
+    },
+    {
+      "_id": "t4",
+      "title": "Optimize Database Queries",
+      "shortDescription": "Add indexes to search terms and resolve N+1 query patterns.",
+      "description": "Analyze query speeds on comments and notifications. Set up compound indexes on task status and creator fields to optimize grid dashboards.",
+      "priority": "Medium",
+      "status": "To Do",
+      "dueDate": "2026-07-19T05:18:08.551Z",
+      "estHours": 5,
+      "assignee": {
+        "name": "Alex Rivera (Dev)",
+        "email": "dev@zenboard.com",
+        "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150"
+      },
+      "workspace": "ZenBoard Platform",
+      "coverImage": "https://images.unsplash.com/photo-1544383835-bda2bc66a55d?w=800",
+      "attachments": [],
+      "creatorId": "u1",
+      "createdAt": "2026-07-12T05:18:08.551Z"
+    },
+    {
+      "_id": "t5",
+      "title": "Create Launch Landing Page",
+      "shortDescription": "Write HTML, CSS, and copy for public launch and marketing campaign.",
+      "description": "Ensure sections are structured for conversion: Hero, Key Pillars, Stats, Stepper Guide, Testimonials, FAQ. Make page responsive and lightweight.",
+      "priority": "Medium",
+      "status": "Review",
+      "dueDate": "2026-07-15T05:18:08.551Z",
+      "estHours": 10,
+      "assignee": {
+        "name": "Emma Watson (Designer)",
+        "email": "designer@zenboard.com",
+        "avatar": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150"
+      },
+      "workspace": "Marketing Launch",
+      "coverImage": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800",
+      "attachments": [],
+      "creatorId": "u2",
+      "createdAt": "2026-07-10T05:18:08.551Z"
+    },
+    {
+      "_id": "t6",
+      "title": "Recharts Dashboard Analytics",
+      "shortDescription": "Develop components to render status rates and workload trends.",
+      "description": "Integrate dynamic bar, area, and pie charts under dashboard tabs. Support real-time recalculation based on filters.",
+      "priority": "High",
+      "status": "In Progress",
+      "dueDate": "2026-07-17T05:18:08.551Z",
+      "estHours": 8,
+      "assignee": {
+        "name": "Alex Rivera (Dev)",
+        "email": "dev@zenboard.com",
+        "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150"
+      },
+      "workspace": "ZenBoard Platform",
+      "coverImage": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800",
+      "attachments": [],
+      "creatorId": "u1",
+      "createdAt": "2026-07-11T05:18:08.551Z"
+    }
+  ],
+  "comments": [
+    {
+      "_id": "c1",
+      "taskId": "t1",
+      "author": {
+        "name": "Sarah Jenkins (PM)",
+        "avatar": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150"
+      },
+      "content": "We need to make sure the webhooks are secure and verify the signature header.",
+      "createdAt": "2026-07-11T05:18:08.551Z"
+    },
+    {
+      "_id": "c2",
+      "taskId": "t1",
+      "author": {
+        "name": "Alex Rivera (Dev)",
+        "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150"
+      },
+      "content": "Understood. Adding the signature verification check using the stripe-webhook-secret key.",
+      "createdAt": "2026-07-12T05:18:08.551Z"
+    }
+  ],
+  "notifications": [
+    {
+      "_id": "n1",
+      "userId": "u2",
+      "title": "Task Assigned",
+      "message": "Sarah Jenkins (PM) assigned you to Stripe Gateway Integration in ZenBoard Platform.",
+      "isRead": false,
+      "createdAt": "2026-07-12T05:18:08.551Z"
+    },
+    {
+      "_id": "n2",
+      "userId": "u2",
+      "title": "Comment Added",
+      "message": "Sarah Jenkins (PM) commented on Stripe Gateway Integration.",
+      "isRead": true,
+      "createdAt": "2026-07-11T05:18:08.551Z"
+    }
+  ]
+}
