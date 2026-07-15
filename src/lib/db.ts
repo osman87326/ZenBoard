@@ -199,14 +199,27 @@ export const db = {
       return { _id: doc.id, ...doc.data() };
     }
     const data = readLocalDB();
-    const newTask = { _id: 't_' + Math.random().toString(36).slice(2, 9), createdAt: new Date().toISOString(), ...taskData };
+    const newTask = {
+      _id: 't_' + Math.random().toString(36).slice(2, 9),
+      createdAt: new Date().toISOString(),
+      owner_email: taskData.owner_email || taskData.creatorId || '',
+      ...taskData,
+    };
     data.tasks.push(newTask);
     writeLocalDB(data);
-    // create notification if assignee exists
+
     if (taskData.assignee?.email) {
       const u = data.users.find((x) => x.email === taskData.assignee.email);
       if (u && u._id !== taskData.creatorId) {
-        data.notifications.push({ _id: 'n_' + Math.random().toString(36).slice(2, 9), userId: u._id, title: 'Task Assigned', message: `You have been assigned to ${taskData.title}`, isRead: false, createdAt: new Date().toISOString() });
+        data.notifications.push({
+          _id: 'n_' + Math.random().toString(36).slice(2, 9),
+          userId: u._id,
+          user_email: u.email,
+          title: 'Task Assigned',
+          message: `You have been assigned to ${taskData.title}`,
+          isRead: false,
+          createdAt: new Date().toISOString(),
+        });
         writeLocalDB(data);
       }
     }
@@ -226,9 +239,9 @@ export const db = {
     const updated = { ...old, ...updateData };
     data.tasks[idx] = updated;
     writeLocalDB(data);
-    // notify on status change
+
     if (updateData.status && old.status !== updateData.status) {
-      const recipients = Array.from(new Set([updated.creatorId, updated.assignee?.email]));
+      const recipients = Array.from(new Set([updated.creatorId, updated.assignee?.email, updated.owner_email]));
       for (const r of recipients) {
         let uId = r;
         if (r && typeof r === 'string' && r.includes('@')) {
@@ -236,7 +249,15 @@ export const db = {
           if (u) uId = u._id;
         }
         if (uId && uId !== updateData.updaterId) {
-          data.notifications.push({ _id: 'n_' + Math.random().toString(36).slice(2, 9), userId: uId, title: 'Task Status Shift', message: `Task "${updated.title}" status updated to "${updateData.status}".`, isRead: false, createdAt: new Date().toISOString() });
+          data.notifications.push({
+            _id: 'n_' + Math.random().toString(36).slice(2, 9),
+            userId: uId,
+            user_email: typeof r === 'string' && r.includes('@') ? r : undefined,
+            title: 'Task Status Shift',
+            message: `Task "${updated.title}" status updated to "${updateData.status}".`,
+            isRead: false,
+            createdAt: new Date().toISOString(),
+          });
         }
       }
       writeLocalDB(data);
@@ -257,7 +278,7 @@ export const db = {
     const data = readLocalDB();
     const before = data.tasks.length;
     data.tasks = data.tasks.filter((t) => t._id !== id);
-    data.comments = data.comments.filter((c) => c.taskId !== id);
+    data.comments = data.comments.filter((c) => c.taskId !== id && c.task_id !== id);
     writeLocalDB(data);
     return data.tasks.length < before;
   },
@@ -268,7 +289,9 @@ export const db = {
       return snap.docs.map((d: any) => ({ _id: d.id, ...d.data() }));
     }
     const data = readLocalDB();
-    return data.comments.filter((c) => c.taskId === taskId).sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+    return data.comments
+      .filter((c) => c.taskId === taskId || c.task_id === taskId)
+      .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
   },
 
   async createComment(commentData: any) {
@@ -278,22 +301,40 @@ export const db = {
       return { _id: doc.id, ...doc.data() };
     }
     const data = readLocalDB();
-    const newComment = { _id: 'c_' + Math.random().toString(36).slice(2, 9), createdAt: new Date().toISOString(), ...commentData };
+    const newComment = {
+      _id: 'c_' + Math.random().toString(36).slice(2, 9),
+      createdAt: new Date().toISOString(),
+      taskId: commentData.taskId || commentData.task_id,
+      task_id: commentData.task_id || commentData.taskId,
+      author: commentData.author,
+      author_name: commentData.author?.name || commentData.author_name,
+      author_email: commentData.author?.email || commentData.author_email,
+      content: commentData.content,
+      ...commentData,
+    };
     data.comments.push(newComment);
     writeLocalDB(data);
-    // trigger notifications similar to previous behavior
-    const task = data.tasks.find((t) => t._id === commentData.taskId);
+
+    const task = data.tasks.find((t) => t._id === (commentData.taskId || commentData.task_id));
     if (task) {
-      const notifyUsers = Array.from(new Set([task.creatorId, task.assignee?.email]));
+      const notifyUsers = Array.from(new Set([task.creatorId, task.assignee?.email, task.owner_email]));
       for (const emailOrId of notifyUsers) {
         let uId = emailOrId;
         if (emailOrId && typeof emailOrId === 'string' && emailOrId.includes('@')) {
           const u = data.users.find((uu) => uu.email === emailOrId);
           if (u) uId = u._id;
         }
-        const authorUser = data.users.find((uu) => uu.name === commentData.author.name);
+        const authorUser = data.users.find((uu) => uu.name === (commentData.author?.name || commentData.author_name));
         if (uId && uId !== authorUser?._id) {
-          data.notifications.push({ _id: 'n_' + Math.random().toString(36).slice(2, 9), userId: uId, title: 'New Comment', message: `${commentData.author.name} commented on "${task.title}": "${commentData.content.substring(0, 40)}..."`, isRead: false, createdAt: new Date().toISOString() });
+          data.notifications.push({
+            _id: 'n_' + Math.random().toString(36).slice(2, 9),
+            userId: uId,
+            user_email: typeof emailOrId === 'string' && emailOrId.includes('@') ? emailOrId : undefined,
+            title: 'New Comment',
+            message: `${commentData.author?.name || commentData.author_name} commented on "${task.title}": "${(commentData.content || '').toString().substring(0, 40)}..."`,
+            isRead: false,
+            createdAt: new Date().toISOString(),
+          });
         }
       }
       writeLocalDB(data);
@@ -307,7 +348,9 @@ export const db = {
       return snap.docs.map((d: any) => ({ _id: d.id, ...d.data() }));
     }
     const data = readLocalDB();
-    return data.notifications.filter((n) => n.userId === userId).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    return data.notifications
+      .filter((n) => n.userId === userId || n.user_email === userId)
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   },
 
   async createNotification(notificationData: any) {
@@ -317,7 +360,14 @@ export const db = {
       return { _id: doc.id, ...doc.data() };
     }
     const data = readLocalDB();
-    const newNotification = { _id: 'n_' + Math.random().toString(36).slice(2, 9), isRead: false, createdAt: new Date().toISOString(), ...notificationData };
+    const newNotification = {
+      _id: 'n_' + Math.random().toString(36).slice(2, 9),
+      isRead: false,
+      createdAt: new Date().toISOString(),
+      userId: notificationData.userId,
+      user_email: notificationData.user_email || notificationData.userId,
+      ...notificationData,
+    };
     data.notifications.push(newNotification);
     writeLocalDB(data);
     return newNotification;
@@ -345,7 +395,11 @@ export const db = {
       return true;
     }
     const data = readLocalDB();
-    data.notifications.forEach((n) => { if (n.userId === userId) n.isRead = true; });
+    data.notifications.forEach((n) => {
+      if (n.userId === userId || n.user_email === userId) {
+        n.isRead = true;
+      }
+    });
     writeLocalDB(data);
     return true;
   }
