@@ -1,12 +1,12 @@
-import { getCurrentUser, loginUser, logoutUser, registerUser } from './auth';
 
-export const authClient = {
-  signIn: loginUser,
-  signUp: registerUser,
-  signOut: logoutUser,
-  getSession: getCurrentUser,
+import { createAuthClient } from "better-auth/react"
+export const authClient = createAuthClient({
+    /** The base URL of the server (optional if you're using the same domain) */
+    baseURL:process.env.BETTER_AUTH_URL || "http://localhost:3000",
+    
+})
+const signIn = async () => {
+  const data = await authClient.signIn.social({
+    provider: "google",
+  });
 };
-
-export const signIn = loginUser;
-export const signUp = registerUser;
-export const useSession = getCurrentUser;
