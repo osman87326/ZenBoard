@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { getUserFromRequest } from '@/lib/auth-request';
 
 export async function GET(req: NextRequest) {
   try {

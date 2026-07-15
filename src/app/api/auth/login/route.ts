@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
 export async function POST(req: NextRequest) {
   try {
@@ -14,17 +16,21 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Invalid email or password' }, { status: 401 });
     }
 
-    const isMatch = await comparePassword(password, user.password);
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return NextResponse.json({ error: 'Invalid email or password' }, { status: 401 });
     }
 
-    const token = signToken({
-      userId: user._id.toString(),
-      name: user.name,
-      email: user.email,
-      avatar: user.avatar,
-    });
+    const token = jwt.sign(
+      {
+        userId: user._id.toString(),
+        name: user.name,
+        email: user.email,
+        avatar: user.avatar,
+      },
+      process.env.JWT_SECRET || 'zenboard-secret-key-12345-temporary',
+      { expiresIn: '7d' }
+    );
 
     const response = NextResponse.json({
       message: 'Login successful',

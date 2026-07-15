@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
 export async function POST(req: NextRequest) {
   try {
@@ -14,7 +16,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'User with this email already exists' }, { status: 400 });
     }
 
-    const hashedPassword = await hashPassword(password);
+    const hashedPassword = await bcrypt.hash(password, 10);
     
     // Choose a default avatar if none provided
     const userAvatar = avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(name)}`;
@@ -26,12 +28,16 @@ export async function POST(req: NextRequest) {
       avatar: userAvatar,
     });
 
-    const token = signToken({
-      userId: newUser._id.toString(),
-      name: newUser.name,
-      email: newUser.email,
-      avatar: newUser.avatar,
-    });
+    const token = jwt.sign(
+      {
+        userId: newUser._id.toString(),
+        name: newUser.name,
+        email: newUser.email,
+        avatar: newUser.avatar,
+      },
+      process.env.JWT_SECRET || 'zenboard-secret-key-12345-temporary',
+      { expiresIn: '7d' }
+    );
 
     const response = NextResponse.json({
       message: 'Registration successful',
